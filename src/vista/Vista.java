@@ -20,6 +20,7 @@ import java.util.Queue;
 import java.util.Stack;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -217,6 +218,7 @@ public class Vista extends JFrame {
      			}else if ( tablero[i][j]  == 2){
 
      				grid[i][j].setBackground(Color.blue);
+     				grid[i][j].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
 
      			}else if (tablero[i][j]  == 3){
 
@@ -417,11 +419,19 @@ public class Vista extends JFrame {
 					n= n.parent;
 				}
 				
+				Node aux = null;
+				
 				while(!s.isEmpty()) {
-					Node aux = s.pop();
+					
+					 aux = s.pop();
+					
 					grid[aux.pos.getI()][aux.pos.getJ()].setBackground(Color.CYAN);
-					Thread.sleep(300);
+					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
+					Thread.sleep(400);
+					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(null);
 				}
+				
+				grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
