@@ -428,7 +428,7 @@ public class Vista extends JFrame {
 					grid[aux.pos.getI()][aux.pos.getJ()].setBackground(Color.CYAN);
 					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
 					Thread.sleep(400);
-					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(null);
+					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/empty.png")));
 				}
 				
 				grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
