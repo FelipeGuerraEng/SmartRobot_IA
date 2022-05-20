@@ -1,24 +1,13 @@
 package control;
 
-import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.util.*;
-import modelo.Arbol;
 import modelo.Node;
 import modelo.Par;
 
 public class Busqueda {
 
 	private static int[][] tablero;
-	private static int[][] aux;
-	private static Arbol raiz;
-	private static Par posMeta1;
-	private static Par posMeta2;
-	private static int cantMetas;
-	private static int rowMeta1;
-	private static int colMeta1;
-	private static int rowMeta2;
-	private static int colMeta2;
 	int[] dirI = { -1, 1, 0, 0 };
 	int[] dirJ = { 0, 0, -1, 1 };
 	private Par inicio;
@@ -48,19 +37,12 @@ public class Busqueda {
 			for (int j = 0; j < 10; ++j) {
 				System.out.print(tablero[i][j] + "  ");
 				if (tablero[i][j] == 2) {
-
 					inicio = new Par(i, j);
-
 				} else if (tablero[i][j] == 3) {
-
 					naves[0] = new Par(i, j);
-
 				} else if (tablero[i][j] == 4) {
-
 					naves[1] = new Par(i, j);
-
 				} else if (tablero[i][j] == 5) {
-
 					items[item] = new Par(i, j);
 					item++;
 				}
@@ -158,6 +140,86 @@ public class Busqueda {
 		}
 
 		return null;
+	}
+
+	public Node Greedy() {
+		PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.costH - b.costH);
+		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
+		while (!pq.isEmpty()) {
+			Node n = pq.poll();
+			if (!n.hasCycles()) {
+				estaEnNave(n);
+				estaEnItem(n);
+				if (n.hasFinished())
+					return n;
+				for (int i = 0; i < 4; ++i) {
+					Par pos = n.pos;
+					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {
+						int newCost = calcularCosto(pos.getI() + dirI[i], pos.getJ() + dirJ[i], n.nave) + n.cost;
+						int newCostH = calcularCostoHeuristico(pos.getI(), pos.getJ(), n);
+						int gas = 0;
+						if (n.nave != 0) {
+							gas = n.nave - 1;
+						}
+						Node son = new Node(new Par(pos.getI() + dirI[i], pos.getJ() + dirJ[i]), n, gas,
+								n.items.clone(), n.naves.clone(), newCost, newCostH);
+						pq.add(son);
+					}
+
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public Node AStar() {
+		PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> (a.cost + a.costH) - (b.cost + b.costH));
+		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
+		while (!pq.isEmpty()) {
+			Node n = pq.poll();
+			if (!n.hasCycles()) {
+				estaEnNave(n);
+				estaEnItem(n);
+				if (n.hasFinished())
+					return n;
+				for (int i = 0; i < 4; ++i) {
+					Par pos = n.pos;
+					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {
+						int newCost = calcularCosto(pos.getI() + dirI[i], pos.getJ() + dirJ[i], n.nave) + n.cost;
+						int newCostH = calcularCostoHeuristico(pos.getI(), pos.getJ(), n);
+						int gas = 0;
+						if (n.nave != 0) {
+							gas = n.nave - 1;
+						}
+						Node son = new Node(new Par(pos.getI() + dirI[i], pos.getJ() + dirJ[i]), n, gas,
+								n.items.clone(), n.naves.clone(), newCost, newCostH);
+						pq.add(son);
+					}
+
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private int calcularCostoHeuristico(int i, int j, Node n) {
+		int cost = 0;
+		int costA = manhattan(i, j, items[0].getI(), items[0].getJ());
+		int costB = manhattan(i, j, items[1].getI(), items[1].getJ());
+		int costC = manhattan(items[0].getI(), items[0].getJ(), items[1].getI(), items[1].getJ());
+		if (n.items[0])
+			cost = costB;
+		else if (n.items[1])
+			cost = costA;
+		else
+			cost = Math.min(costA, costB) + costC;
+		return cost;
+	}
+
+	private int manhattan(int i0, int j0, int i1, int j1) {
+		return Math.abs(i0 - i1) + Math.abs(j0 - j1);
 	}
 
 	public int calcularCosto(int i, int j, int gas) {

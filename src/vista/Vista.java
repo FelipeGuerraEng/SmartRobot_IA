@@ -41,11 +41,9 @@ import control.Busqueda;
 import control.Input;
 import modelo.Node;
 
-
-
 public class Vista extends JFrame {
 
-	private JPanel  pVarios, pBusqueda, pExtra, pInforme;
+	private JPanel pVarios, pBusqueda, pExtra, pInforme;
 	private JLabel lTipoBusqueda, lAlgoritmo, lInforme;
 	private JComboBox<Object> cbTipoBusqueda, cbAlgoritmo;
 	private JButton bIniciar, bCargar;
@@ -57,9 +55,7 @@ public class Vista extends JFrame {
 	private JLabel[][] grid;
 	private int[][] tablero;
 
-
 	private ManejaEventos eventos;
-
 
 	public Vista() {
 
@@ -73,47 +69,46 @@ public class Vista extends JFrame {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	}
 
-
 	private void initGUI() {
 
-		tablero = new int [12][12];
+		tablero = new int[12][12];
 
-		pExtra =  new JPanel();
+		pExtra = new JPanel();
 		pVarios = new JPanel();
 		pBusqueda = new JPanel();
 		pInforme = new JPanel();
 
-		bIniciar=new JButton("Iniciar");
-		bIniciar.setFont(new Font("Tahoma", Font.BOLD, 22)); 
-		bIniciar.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
+		bIniciar = new JButton("Iniciar");
+		bIniciar.setFont(new Font("Tahoma", Font.BOLD, 22));
+		bIniciar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		bIniciar.setEnabled(false);
 
-		bCargar=new JButton("Cargar Mapa");
-		bCargar.setFont(new Font("Tahoma", Font.BOLD, 22)); 
-		bCargar.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
+		bCargar = new JButton("Cargar Mapa");
+		bCargar.setFont(new Font("Tahoma", Font.BOLD, 22));
+		bCargar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		bCargar.setEnabled(true);
-		
+
 		textArea = new JTextPane();
 		textArea.setEditable(false);
 		textArea.setFont(new Font("Tahoma", Font.BOLD, 22));
 		StyledDocument style = textArea.getStyledDocument();
-		SimpleAttributeSet align= new SimpleAttributeSet();
+		SimpleAttributeSet align = new SimpleAttributeSet();
 		StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
 		style.setParagraphAttributes(0, style.getLength(), align, false);
 
 		lTipoBusqueda = new JLabel("Tipo de Búsqueda ");
-		lTipoBusqueda.setFont(new Font("Tahoma", Font.BOLD, 18)); 
+		lTipoBusqueda.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lTipoBusqueda.setForeground(Color.BLACK);
 		lTipoBusqueda.setHorizontalAlignment(SwingConstants.CENTER);
 
 		lAlgoritmo = new JLabel("Algoritmo ");
-		lAlgoritmo.setFont(new Font("Tahoma", Font.BOLD, 18)); 
+		lAlgoritmo.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lAlgoritmo.setForeground(Color.BLACK);
 		lAlgoritmo.setHorizontalAlignment(SwingConstants.CENTER);
 		lAlgoritmo.setEnabled(true);
 
 		lInforme = new JLabel("Informe ");
-		lInforme.setFont(new Font("Tahoma", Font.BOLD, 22)); 
+		lInforme.setFont(new Font("Tahoma", Font.BOLD, 22));
 		lInforme.setForeground(Color.BLACK);
 		lInforme.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -143,9 +138,8 @@ public class Vista extends JFrame {
 		cbAlgoritmo.setEditable(false);
 		cbAlgoritmo.setEnabled(false);
 
-
-		pBusqueda.setLayout(new GridLayout(6,1));
-		pBusqueda.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
+		pBusqueda.setLayout(new GridLayout(6, 1));
+		pBusqueda.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		pBusqueda.add(lTipoBusqueda);
 		pBusqueda.add(cbTipoBusqueda);
 		pBusqueda.add(lAlgoritmo);
@@ -157,12 +151,12 @@ public class Vista extends JFrame {
 		pInforme.add(lInforme, BorderLayout.NORTH);
 		pInforme.add(textArea, BorderLayout.CENTER);
 
-		pExtra.setLayout(new GridLayout(10,10));
+		pExtra.setLayout(new GridLayout(10, 10));
 
-		grid= new JLabel[10][10];
-		Dimension size = new Dimension (60,60);
-		for (int i = 0; i < 10; i++){
-			for (int j = 0; j < 10; j++){
+		grid = new JLabel[10][10];
+		Dimension size = new Dimension(60, 60);
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
 				grid[i][j] = new JLabel();
 				grid[i][j].setBorder(new LineBorder(Color.BLACK));
 				grid[i][j].setPreferredSize(size);
@@ -171,11 +165,10 @@ public class Vista extends JFrame {
 			}
 		}
 
-
 		pExtra.setOpaque(false);
 
-		pVarios.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
-		pVarios.setLayout(new GridLayout(2,1));
+		pVarios.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		pVarios.setLayout(new GridLayout(2, 1));
 		pVarios.add(pBusqueda);
 		pVarios.add(pInforme);
 		pVarios.setPreferredSize(new Dimension(350, 766));
@@ -193,85 +186,82 @@ public class Vista extends JFrame {
 		cbTipoBusqueda.addItemListener(eventos);
 		addWindowListener(eventos);
 
-
 	}
 
-	public void cargarMatriz (){
+	public void cargarMatriz() {
 
-		 try {
-         	
-				tablero = Input.input();
-				
-			} catch (FileNotFoundException e) {
-				
-				e.printStackTrace();
+		try {
+
+			tablero = Input.input();
+
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		}
+
+		for (int i = 0; i < 10; ++i) {
+
+			for (int j = 0; j < 10; ++j) {
+
+				if (tablero[i][j] == 1) {
+
+					grid[i][j].setBackground(Color.darkGray);
+
+				} else if (tablero[i][j] == 2) {
+
+					grid[i][j].setBackground(Color.blue);
+					grid[i][j].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
+
+				} else if (tablero[i][j] == 3) {
+
+					grid[i][j].setBackground(Color.green);
+
+				} else if (tablero[i][j] == 4) {
+
+					grid[i][j].setBackground(Color.pink);
+
+				} else if (tablero[i][j] == 5) {
+
+					grid[i][j].setBackground(Color.yellow);
+
+				} else if (tablero[i][j] == 6) {
+
+					grid[i][j].setBackground(Color.red);
+
+				} else {
+
+					grid[i][j].setBackground(Color.WHITE);
+
+				}
 			}
-         
-         for(int i = 0; i < 10; ++i){
-         	
- 			for(int j = 0; j < 10; ++j){
- 				
- 				if ( tablero[i][j] == 1){
-
- 					grid[i][j].setBackground(Color.darkGray);
-
-     			}else if ( tablero[i][j]  == 2){
-
-     				grid[i][j].setBackground(Color.blue);
-     				grid[i][j].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
-
-     			}else if (tablero[i][j]  == 3){
-
-     				grid[i][j].setBackground(Color.green);
-
-     			}else if ( tablero[i][j]  == 4){
-
-     				grid[i][j].setBackground(Color.pink);
-
-     			}else if ( tablero[i][j]  == 5){
-
-     				grid[i][j].setBackground(Color.yellow);
-
-     			}else if ( tablero[i][j]  == 6){
-
-     				grid[i][j].setBackground(Color.red);
-
-     			}else {
-     				
-     				grid[i][j].setBackground(Color.WHITE);
-     				
-     			}
- 			}
- 		}
+		}
 	}
-
 
 	public class ManejaEventos extends WindowAdapter implements ActionListener, ItemListener {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			
+
 			if (event.getSource() == bCargar) {
 
 				cargarMatriz();
 				bCargar.setEnabled(false);
 				bIniciar.setEnabled(true);
-	            
 
 			}
-			
+
 			if (event.getSource() == bIniciar) {
 
-				if ( cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Amplitud")) {
-					
+				if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Amplitud")) {
+
 					Busqueda b = new Busqueda();
 					b.init();
 					Node n = b.BFS();
 					PrintMatrix r = new PrintMatrix(n, grid);
 					Thread t = new Thread(r);
 					t.start();
-					
-				}else if ( cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Costo uniforme")) {
+
+				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Costo uniforme")) {
 					Busqueda b = new Busqueda();
 					b.init();
 					Node n = b.BCU();
@@ -279,8 +269,8 @@ public class Vista extends JFrame {
 					Thread t = new Thread(r);
 					t.start();
 					System.out.print("Costo uniforme");
-					
-				}else if ( cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Profundidad evitando ciclos")) {
+
+				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Profundidad evitando ciclos")) {
 					Busqueda b = new Busqueda();
 					b.init();
 					Node n = b.DFS();
@@ -288,22 +278,24 @@ public class Vista extends JFrame {
 					Thread t = new Thread(r);
 					t.start();
 					System.out.print("Profundidad evitando ciclos");
-					
-				}else if ( cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Avara")) {
-					
-					System.out.print("Avara");
-					
-				}else if ( cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("A*")) {
-					
-					System.out.print("A*");
-					
+
+				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Avara")) {
+					Busqueda b = new Busqueda();
+					b.init();
+					Node n = b.Greedy();
+					PrintMatrix r = new PrintMatrix(n, grid);
+					Thread t = new Thread(r);
+					t.start();
+				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("A*")) {
+					Busqueda b = new Busqueda();
+					b.init();
+					Node n = b.AStar();
+					PrintMatrix r = new PrintMatrix(n, grid);
+					Thread t = new Thread(r);
+					t.start();
 				}
-	          
 
 			}
-			
-			
-			
 
 			if (event.getSource() == salirItem) {
 
@@ -320,7 +312,7 @@ public class Vista extends JFrame {
 
 			}
 
-			if(event.getSource() == reiniciarItem){
+			if (event.getSource() == reiniciarItem) {
 
 				int respuestaCaja = JOptionPane.showConfirmDialog(null,
 						"Desea reiniciar?",
@@ -334,7 +326,7 @@ public class Vista extends JFrame {
 						@Override
 						public void run() {
 
-							Vista myView =	new Vista();
+							Vista myView = new Vista();
 
 						}
 					});
@@ -344,10 +336,7 @@ public class Vista extends JFrame {
 
 			}
 
-
 		}
-
-
 
 		public void windowClosing(WindowEvent e) {
 
@@ -364,11 +353,9 @@ public class Vista extends JFrame {
 
 		}
 
-
-
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			
+
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 
 				Object item = e.getItem();
@@ -381,7 +368,7 @@ public class Vista extends JFrame {
 					cbAlgoritmo.addItem("Costo uniforme");
 					cbAlgoritmo.addItem("Profundidad evitando ciclos");
 
-				}else if (item.toString().equalsIgnoreCase("Busqueda Informada")) {
+				} else if (item.toString().equalsIgnoreCase("Busqueda Informada")) {
 
 					cbAlgoritmo.removeAllItems();
 					cbAlgoritmo.addItem("");
@@ -392,59 +379,57 @@ public class Vista extends JFrame {
 
 				cbAlgoritmo.setEnabled(true);
 
-				 
-			       
-			    } else {
-			    	
-			    	cbAlgoritmo.removeAllItems();
-			    	cbAlgoritmo.setEnabled(false);
-			    }
-			
+			} else {
+
+				cbAlgoritmo.removeAllItems();
+				cbAlgoritmo.setEnabled(false);
+			}
+
 		}
 	}
-	static class PrintMatrix implements Runnable{
+
+	static class PrintMatrix implements Runnable {
 		Node n;
 		JLabel[][] grid;
+
 		public PrintMatrix(Node n, JLabel[][] grid) {
 			this.n = n;
 			this.grid = grid;
 		}
+
 		@Override
 		public void run() {
-			
+
 			try {
 				Stack<Node> s = new Stack<>();
-				while(n!=null) {
+				while (n != null) {
 					s.add(n);
-					n= n.parent;
+					n = n.parent;
 				}
-				
+
 				Node aux = null;
-				
-				while(!s.isEmpty()) {
-					
-					 aux = s.pop();
-					
+
+				while (!s.isEmpty()) {
+
+					aux = s.pop();
+
 					grid[aux.pos.getI()][aux.pos.getJ()].setBackground(Color.CYAN);
-					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
+					grid[aux.pos.getI()][aux.pos.getJ()]
+							.setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
 					Thread.sleep(400);
-					grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/empty.png")));
+					grid[aux.pos.getI()][aux.pos.getJ()]
+							.setIcon(new ImageIcon(getClass().getResource("../imagenes/empty.png")));
 				}
-				
-				grid[aux.pos.getI()][aux.pos.getJ()].setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
-				
+
+				grid[aux.pos.getI()][aux.pos.getJ()]
+						.setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
 
-
-
-
-
-
 }
-
