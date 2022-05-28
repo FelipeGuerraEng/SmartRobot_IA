@@ -39,6 +39,7 @@ import javax.swing.text.StyledDocument;
 
 import control.Busqueda;
 import control.Input;
+import modelo.Data;
 import modelo.Node;
 
 public class Vista extends JFrame {
@@ -47,13 +48,14 @@ public class Vista extends JFrame {
 	private JLabel lTipoBusqueda, lAlgoritmo, lInforme;
 	private JComboBox<Object> cbTipoBusqueda, cbAlgoritmo;
 	private JButton bIniciar, bCargar;
-	private JTextPane textArea;
+	public static JTextPane textArea;
 	private Container contenedor;
 	private JMenuBar barra;
-	private JMenu opciones;
+	public static JMenu opciones;
 	private JMenuItem salirItem, reiniciarItem;
 	private JLabel[][] grid;
 	private int[][] tablero;
+	public int selectedIndex;
 
 	private ManejaEventos eventos;
 
@@ -72,6 +74,7 @@ public class Vista extends JFrame {
 	private void initGUI() {
 
 		tablero = new int[12][12];
+		selectedIndex = 0;
 
 		pExtra = new JPanel();
 		pVarios = new JPanel();
@@ -90,10 +93,10 @@ public class Vista extends JFrame {
 
 		textArea = new JTextPane();
 		textArea.setEditable(false);
-		textArea.setFont(new Font("Tahoma", Font.BOLD, 22));
+		textArea.setFont(new Font("Tahoma", Font.BOLD, 20));
 		StyledDocument style = textArea.getStyledDocument();
 		SimpleAttributeSet align = new SimpleAttributeSet();
-		StyleConstants.setAlignment(align, StyleConstants.ALIGN_CENTER);
+		StyleConstants.setAlignment(align, StyleConstants.ALIGN_LEFT);
 		style.setParagraphAttributes(0, style.getLength(), align, false);
 
 		lTipoBusqueda = new JLabel("Tipo de Búsqueda ");
@@ -252,49 +255,90 @@ public class Vista extends JFrame {
 
 			if (event.getSource() == bIniciar) {
 
-				if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Amplitud")) {
+				selectedIndex = cbAlgoritmo.getSelectedIndex();
 
-					Busqueda b = new Busqueda();
-					b.init();
-					Node n = b.BFS();
-					PrintMatrix r = new PrintMatrix(n, grid);
-					Thread t = new Thread(r);
-					t.start();
+				if (selectedIndex == 0 || selectedIndex == -1) {
 
-				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Costo uniforme")) {
-					Busqueda b = new Busqueda();
-					b.init();
-					Node n = b.BCU();
-					PrintMatrix r = new PrintMatrix(n, grid);
-					Thread t = new Thread(r);
-					t.start();
-					System.out.print("Costo uniforme");
+					JOptionPane.showMessageDialog(null,"Debes elegir un algoritmo antes de iniciar", "Selecciona un Algoritmo",
+							JOptionPane.INFORMATION_MESSAGE);
 
-				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Profundidad evitando ciclos")) {
-					Busqueda b = new Busqueda();
-					b.init();
-					Node n = b.DFS();
-					PrintMatrix r = new PrintMatrix(n, grid);
-					Thread t = new Thread(r);
-					t.start();
-					System.out.print("Profundidad evitando ciclos");
 
-				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Avara")) {
-					Busqueda b = new Busqueda();
-					b.init();
-					Node n = b.Greedy();
-					PrintMatrix r = new PrintMatrix(n, grid);
-					Thread t = new Thread(r);
-					t.start();
-				} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("A*")) {
-					Busqueda b = new Busqueda();
-					b.init();
-					Node n = b.AStar();
-					PrintMatrix r = new PrintMatrix(n, grid);
-					Thread t = new Thread(r);
-					t.start();
+				}else {
+					
+					bIniciar.setEnabled(false);
+					opciones.setEnabled(false);
+					cbAlgoritmo.setEnabled(false);
+					cbTipoBusqueda.setEnabled(false);
+					
+					if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Amplitud")) {
+
+						Busqueda b = new Busqueda();
+						b.init();
+						long start = System.currentTimeMillis();
+						Data n = b.BFS();
+						long end = System.currentTimeMillis();
+						long time = end-start;
+						textArea.setText("\n\nCosto: "+n.camino.cost+"\n\nProfundidad: "+n.profundidad+"\n\nNodos Expandidos: "+n.nodosExpandidos+"\n\nTiempo de cómputo: "+time+" ms");
+
+						PrintMatrix r = new PrintMatrix(n, grid, time);
+						Thread t = new Thread(r);
+						t.start();
+
+					} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Costo uniforme")) {
+						Busqueda b = new Busqueda();
+						b.init();
+						long start = System.currentTimeMillis();
+						Data n = b.BCU();
+						long end = System.currentTimeMillis();
+						long time = end-start;
+						textArea.setText("\n\nCosto: "+n.camino.cost+"\n\nProfundidad: "+n.profundidad+"\n\nNodos Expandidos: "+n.nodosExpandidos+"\n\nTiempo de cómputo: "+time+" ms");
+						
+						PrintMatrix r = new PrintMatrix(n, grid, time);
+						Thread t = new Thread(r);
+						t.start();
+						System.out.print("Costo uniforme");
+
+					} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Profundidad evitando ciclos")) {
+						Busqueda b = new Busqueda();
+						b.init();
+						long start = System.currentTimeMillis();
+						Data n = b.DFS();
+						long end = System.currentTimeMillis();
+						long time = end-start;
+						textArea.setText("\n\nCosto: "+n.camino.cost+"\n\nProfundidad: "+n.profundidad+"\n\nNodos Expandidos: "+n.nodosExpandidos+"\n\nTiempo de cómputo: "+time+" ms");
+						
+						PrintMatrix r = new PrintMatrix(n, grid, time);
+						Thread t = new Thread(r);
+						t.start();
+						System.out.print("Profundidad evitando ciclos");
+
+					} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("Avara")) {
+						Busqueda b = new Busqueda();
+						b.init();
+						long start = System.currentTimeMillis();
+						Data n = b.Greedy();
+						long end = System.currentTimeMillis();
+						long time = end-start;
+						textArea.setText("\n\nCosto: "+n.camino.cost+"\n\nProfundidad: "+n.profundidad+"\n\nNodos Expandidos: "+n.nodosExpandidos+"\n\nTiempo de cómputo: "+time+" ms");
+						
+						PrintMatrix r = new PrintMatrix(n, grid, time);
+						Thread t = new Thread(r);
+						t.start();
+					} else if (cbAlgoritmo.getSelectedItem().toString().equalsIgnoreCase("A*")) {
+						Busqueda b = new Busqueda();
+						b.init();
+						long start = System.currentTimeMillis();
+						Data n = b.AStar();
+						long end = System.currentTimeMillis();
+						long time = end-start;
+						textArea.setText("\n\nCosto: "+n.camino.cost+"\n\nProfundidad: "+n.profundidad+"\n\nNodos Expandidos: "+n.nodosExpandidos+"\n\nTiempo de cómputo: "+time+" ms");
+						
+						PrintMatrix r = new PrintMatrix(n, grid, time);
+						Thread t = new Thread(r);
+						t.start();
+					}
+
 				}
-
 			}
 
 			if (event.getSource() == salirItem) {
@@ -389,18 +433,23 @@ public class Vista extends JFrame {
 	}
 
 	static class PrintMatrix implements Runnable {
+		
 		Node n;
+		Data data;
 		JLabel[][] grid;
+		long time;
 
-		public PrintMatrix(Node n, JLabel[][] grid) {
-			this.n = n;
+		public PrintMatrix(Data data, JLabel[][] grid, long time) {
+			this.data = data;
 			this.grid = grid;
+			this.time = time;
 		}
 
 		@Override
 		public void run() {
 
 			try {
+				n = data.camino;
 				Stack<Node> s = new Stack<>();
 				while (n != null) {
 					s.add(n);
@@ -423,6 +472,8 @@ public class Vista extends JFrame {
 
 				grid[aux.pos.getI()][aux.pos.getJ()]
 						.setIcon(new ImageIcon(getClass().getResource("../imagenes/robot.png")));
+				opciones.setEnabled(true);
+				textArea.setText("\n\nCosto: "+data.camino.cost+"\n\nProfundidad: "+data.profundidad+"\n\nNodos Expandidos: "+data.nodosExpandidos+"\n\nTiempo de cómputo: "+time+" ms"+"\n\n\n      ********* FIN!! *********");
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

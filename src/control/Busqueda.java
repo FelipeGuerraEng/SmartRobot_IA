@@ -2,6 +2,8 @@ package control;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+
+import modelo.Data;
 import modelo.Node;
 import modelo.Par;
 
@@ -32,10 +34,10 @@ public class Busqueda {
 			e.printStackTrace();
 		}
 		int item = 0;
-		System.out.println();
+		//System.out.println();
 		for (int i = 0; i < 10; ++i) {
 			for (int j = 0; j < 10; ++j) {
-				System.out.print(tablero[i][j] + "  ");
+				//System.out.print(tablero[i][j] + "  ");
 				if (tablero[i][j] == 2) {
 					inicio = new Par(i, j);
 				} else if (tablero[i][j] == 3) {
@@ -47,12 +49,15 @@ public class Busqueda {
 					item++;
 				}
 			}
-			System.out.println();
+			//System.out.println();
 		}
 
 	}
 
-	public Node BFS() {
+	public Data BFS() {
+		
+		Data data = new Data();
+		
 		Queue<Node> pq = new LinkedList<>();
 		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
 		while (!pq.isEmpty()) {
@@ -60,8 +65,15 @@ public class Busqueda {
 			if (!n.hasCycles()) {
 				estaEnNave(n);
 				estaEnItem(n);
-				if (n.hasFinished())
-					return n;
+				if (n.hasFinished()) {
+					
+					data.camino = n;
+					return data;
+				}
+				
+				data.nodosExpandidos ++;
+				data.profundidad = Math.max(data.profundidad, n.profundidad);
+				
 				for (int i = 0; i < 4; ++i) {
 					Par pos = n.pos;
 					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {
@@ -82,7 +94,10 @@ public class Busqueda {
 		return null;
 	}
 
-	public Node DFS() {
+	public Data DFS() {
+		
+		Data data = new Data();
+		
 		Stack<Node> pq = new Stack<>();
 		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
 		while (!pq.isEmpty()) {
@@ -90,8 +105,14 @@ public class Busqueda {
 			if (!n.hasCycles()) {
 				estaEnNave(n);
 				estaEnItem(n);
-				if (n.hasFinished())
-					return n;
+				if (n.hasFinished()) {
+					
+					data.camino = n;
+					return data;
+				}
+				
+				data.nodosExpandidos ++;
+				data.profundidad = Math.max(data.profundidad, n.profundidad);
 				for (int i = 3; i > -1; --i) {
 					Par pos = n.pos;
 					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {
@@ -112,7 +133,10 @@ public class Busqueda {
 		return null;
 	}
 
-	public Node BCU() {
+	public Data BCU() {
+		
+		Data data = new Data();
+		
 		PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.cost - b.cost);
 		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
 		while (!pq.isEmpty()) {
@@ -120,8 +144,14 @@ public class Busqueda {
 			if (!n.hasCycles()) {
 				estaEnNave(n);
 				estaEnItem(n);
-				if (n.hasFinished())
-					return n;
+				if (n.hasFinished()) {
+					
+					data.camino = n;
+					return data;
+				}
+				
+				data.nodosExpandidos ++;
+				data.profundidad = Math.max(data.profundidad, n.profundidad);
 				for (int i = 0; i < 4; ++i) {
 					Par pos = n.pos;
 					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {
@@ -142,7 +172,10 @@ public class Busqueda {
 		return null;
 	}
 
-	public Node Greedy() {
+	public Data Greedy() {
+		
+		Data data = new Data();
+		
 		PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.costH - b.costH);
 		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
 		while (!pq.isEmpty()) {
@@ -150,8 +183,14 @@ public class Busqueda {
 			if (!n.hasCycles()) {
 				estaEnNave(n);
 				estaEnItem(n);
-				if (n.hasFinished())
-					return n;
+				if (n.hasFinished()) {
+					
+					data.camino = n;
+					return data;
+				}
+				
+				data.nodosExpandidos ++;
+				data.profundidad = Math.max(data.profundidad, n.profundidad);
 				for (int i = 0; i < 4; ++i) {
 					Par pos = n.pos;
 					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {
@@ -173,7 +212,10 @@ public class Busqueda {
 		return null;
 	}
 
-	public Node AStar() {
+	public Data AStar() {
+		
+		Data data = new Data();
+		
 		PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> (a.cost + a.costH) - (b.cost + b.costH));
 		pq.add(new Node(inicio, null, 0, new boolean[2], new boolean[2], 0, 0));
 		while (!pq.isEmpty()) {
@@ -181,8 +223,14 @@ public class Busqueda {
 			if (!n.hasCycles()) {
 				estaEnNave(n);
 				estaEnItem(n);
-				if (n.hasFinished())
-					return n;
+				if (n.hasFinished()) {
+					
+					data.camino = n;
+					return data;
+				}
+				
+				data.nodosExpandidos ++;
+				data.profundidad = Math.max(data.profundidad, n.profundidad);
 				for (int i = 0; i < 4; ++i) {
 					Par pos = n.pos;
 					if (isPossible(pos.getI() + dirI[i], pos.getJ() + dirJ[i])) {

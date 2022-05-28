@@ -10,6 +10,7 @@ public class Node {
 	public boolean[] naves;
 	public int cost;
 	public int costH;
+	public int profundidad;
 	
 	public Node(Par pos, Node parent, int nave, boolean[] items, boolean[] naves, int cost, int costH) {
 		this.pos = pos;
@@ -19,6 +20,17 @@ public class Node {
 		this.naves = naves;
 		this.cost = cost;
 		this.costH = costH;
+		
+		if (parent == null) {
+			
+			this.profundidad = 1;
+			
+		}else {
+			
+			this.profundidad = parent.profundidad + 1;
+		}
+		
+		
 	}
 	public boolean hasFinished() {
 		return items[0] && items[1];
